@@ -133,7 +133,6 @@ function updateHistory(activeIndex) {
     const step = state.steps[activeIndex];
     const li = document.createElement('li');
 
-    // PERBAIKAN: Menggunakan kelas animasi dari config Tailwind
     li.className =
       'flex items-start gap-2 p-3 rounded-lg transition-all duration-300 ease-in-out animate-fadeIn';
     li.id = `history-step-${activeIndex}`;
