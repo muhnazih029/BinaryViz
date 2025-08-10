@@ -25,13 +25,6 @@ const dom = {
   },
 };
 
-const icons = {
-  back: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>`,
-  next: `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>`,
-  play: `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7 5.561v12.878a.5.5 0 00.74.429l10.814-6.439a.5.5 0 000-.858L7.74 5.132a.5.5 0 00-.74.429z"></path></svg>`,
-  pause: `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8.5 5.5a1 1 0 00-1 1v11a1 1 0 002 0v-11a1 1 0 00-1-1zm7 0a1 1 0 00-1 1v11a1 1 0 002 0v-11a1 1 0 00-1-1z"></path></svg>`,
-};
-
 let state = {
   steps: [],
   currentStep: -1,
