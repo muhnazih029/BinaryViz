@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id" class="">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BinaryViz | Visualisasi Binary Search</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    },
+                    animation: {
+                        fadeIn: 'fadeIn 0.5s ease-out',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+            (function () {
+                if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            })();
+    </script>
+</head>
+
+<body class="font-sans bg-gray-100 dark:bg-slate-900 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+
+    <div id="app-wrapper" class="p-4 md:p-8">
+        <div
+            class="container relative mx-auto max-w-4xl bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8">
+            <button id="dark-mode-toggle"
+                class="absolute top-4 right-4 z-10 p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                title="Toggle Dark Mode">
+                <svg id="sun-icon" class="w-6 h-6 text-gray-800 dark:text-gray-200" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 3v1m0 16v-1m8.364-8.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M21 12h-1M4 12H3m16.364 4.364l.707.707M4.222 6.343l.707.707M12 18a6 6 0 100-12 6 6 0 000 12z">
+                    </path>
+                </svg>
+                <svg id="moon-icon" class="w-6 h-6 text-white hidden" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                    </path>
+                </svg>
+            </button>
+
+            <header class="text-center mt-12 mb-8">
+                <h1 class="text-3xl sm:text-4xl md:text-4xl font-bold text-gray-900 dark:text-white">Visualisasi Binary
+                    Search</h1>
+                <p class="text-sm sm:text-base mt-4 text-gray-600 dark:text-gray-400">Alat bantu interaktif untuk
+                    memahami cara kerja Binary Search.</p>
+            </header>
+
+            <main class="flex flex-col gap-8">
+                <!-- 1. Kotak Kontrol -->
+                <section class="bg-gray-50 dark:bg-slate-700/50 p-6 rounded-xl shadow-lg flex flex-col gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="array-input"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data Array
+                                (terurut)</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="array-input"
+                                    class="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md focus:ring-indigo-500 focus:border-indigo-500">
+                                <button id="randomize-btn"
+                                    class="px-3 bg-gray-200 dark:bg-gray-600 rounded-md hover:bg-gray-300 dark:hover:bg-gray-500 transition"
+                                    title="Generate Data Acak Baru">
+                                    <svg class="w-5 h-5 text-gray-600 dark:text-gray-300" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M21 12a9 9 0 0 0-9-9C7.42 3 4.21 5.47 3.27 9" />
+                                        <path d="M3 12a9 9 0 0 0 9 9c4.58 0 7.79-2.47 8.73-6" />
+                                        <path d="M21 6v6h-6" />
+                                        <path d="M3 18v-6h6" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="target-input"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Angka yang
+                                Dicari</label>
+                            <input type="number" id="target-input"
+                                class="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                                placeholder="Contoh: 23">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="speed-slider"
+                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kecepatan Animasi:
+                            <span id="speed-label" class="font-semibold">1125 ms</span></label>
+                        <input type="range" id="speed-slider" min="250" max="2000" value="1125"
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-600">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+                        <button id="start-btn"
+                            class="w-full bg-indigo-600 text-white font-semibold py-2.5 rounded-md hover:bg-indigo-700 transition-transform transform hover:scale-105 shadow-md">Mulai
+                            Visualisasi</button>
+                        <button id="reset-btn"
+                            class="w-full bg-gray-600 text-white font-semibold py-2.5 rounded-md hover:bg-gray-700 transition-transform transform hover:scale-105 shadow-md">Reset</button>
+                    </div>
+                </section>
+
+                <!-- 2. Area Visualisasi -->
+                <section class="bg-gray-50 dark:bg-slate-700/50 p-6 rounded-xl shadow-lg flex flex-col">
+                    <h2 class="text-xl font-bold mb-2 text-center text-gray-900 dark:text-white">Area Visualisasi</h2>
+                    <div id="array-container-wrapper"
+                        class="flex-grow flex items-center overflow-x-auto p-4 min-h-[150px]">
+                        <div id="array-container" class="flex gap-3 items-center mx-auto"></div>
+                    </div>
+                    <div
+                        class="flex flex-col items-center gap-4 mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+                        <div id="legend-container" class="flex justify-center gap-x-4 gap-y-2 text-sm flex-wrap">
+                            <span class="flex items-center"><span class="w-4 h-4 rounded-md bg-blue-500"></span><span
+                                    class="ml-2">Low</span></span>
+                            <span class="flex items-center"><span class="w-4 h-4 rounded-md bg-orange-500"></span><span
+                                    class="ml-2">Mid</span></span>
+                            <span class="flex items-center"><span class="w-4 h-4 rounded-md bg-red-500"></span><span
+                                    class="ml-2">High</span></span>
+                            <span class="flex items-center"><span class="w-4 h-4 rounded-md bg-green-500"></span><span
+                                    class="ml-2">Ditemukan</span></span>
+                            <span class="flex items-center"><span class="w-4 h-4 rounded-md bg-gray-500"></span><span
+                                    class="ml-2">Diabaikan</span></span>
+                        </div>
+                        <div id="visualization-controls"
+                            class="flex items-center justify-center gap-4 mt-4 p-2 bg-gray-100 dark:bg-gray-700 rounded-full shadow-inner">
+                            <button id="back-btn"
+                                class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="Langkah Mundur"></button>
+                            <button id="play-pause-btn"
+                                class="p-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-110"></button>
+                            <button id="next-btn"
+                                class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                title="Langkah Maju"></button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Penjelasan Langkah -->
+                <section class="bg-slate-800 dark:bg-black/20 p-6 rounded-xl shadow-lg flex flex-col">
+                    <h2 class="text-xl font-bold mb-4 text-center text-white">Penjelasan Langkah</h2>
+                    <div class="flex-grow flex items-center justify-center">
+                        <p id="explanation-text" class="text-center font-mono text-gray-300 min-h-[80px]">Penjelasan
+                            setiap langkah akan muncul di sini.</p>
+                    </div>
+                </section>
+
+                <!-- 4. Riwayat Proses Pencarian -->
+                <section class="bg-gray-50 dark:bg-slate-700/50 p-6 rounded-xl shadow-lg">
+                    <h2 class="text-xl font-bold mb-4 text-center text-gray-900 dark:text-white">Riwayat Proses
+                        Pencarian</h2>
+                    <ol id="history-list" class="dark:text-gray-300 h-48 overflow-y-auto p-2 space-y-2"></ol>
+                </section>
+            </main>
+        </div>
+
+        <div id="modal-overlay"
+            class="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+            <div id="modal-box"
+                class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 w-full max-w-md transform scale-95 transition-transform duration-300">
+                <h3 id="modal-title" class="text-xl font-bold text-gray-900 dark:text-white mb-4"></h3>
+                <p id="modal-message" class="text-gray-600 dark:text-gray-300 mb-6"></p>
+                <div id="modal-buttons" class="flex justify-end gap-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/script.js"></script>
+</body>
+
+</html>
